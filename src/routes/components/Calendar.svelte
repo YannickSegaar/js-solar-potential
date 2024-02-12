@@ -25,16 +25,16 @@
   let opened = false;
 
   const monthDays: Record<string, number> = {
-    January: 31,
-    February: 28,
-    March: 31,
+    Januari: 31,
+    Februari: 28,
+    Maart: 31,
     April: 30,
-    May: 31,
-    June: 30,
-    July: 31,
-    August: 31,
+    Mei: 31,
+    Juni: 30,
+    Juli: 31,
+    Augustus: 31,
     September: 30,
-    October: 31,
+    Oktober: 31,
     November: 30,
     December: 31,
   };

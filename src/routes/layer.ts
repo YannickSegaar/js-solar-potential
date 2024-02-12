@@ -45,8 +45,8 @@ export async function getLayer(
         bounds: mask.bounds,
         palette: {
           colors: colors,
-          min: 'No roof',
-          max: 'Roof',
+          min: 'Niet-dak',
+          max: 'Dak',
         },
         render: (showRoofOnly) => [
           renderPalette({
@@ -107,8 +107,8 @@ export async function getLayer(
         bounds: mask.bounds,
         palette: {
           colors: colors,
-          min: 'Shady',
-          max: 'Sunny',
+          min: 'Schaduw',
+          max: 'Zon',
         },
         render: (showRoofOnly) => [
           renderPalette({
@@ -132,8 +132,8 @@ export async function getLayer(
         bounds: mask.bounds,
         palette: {
           colors: colors,
-          min: 'Shady',
-          max: 'Sunny',
+          min: 'Schaduw',
+          max: 'Zon',
         },
         render: (showRoofOnly) =>
           [...Array(12).keys()].map((month) =>
@@ -159,8 +159,8 @@ export async function getLayer(
         bounds: mask.bounds,
         palette: {
           colors: colors,
-          min: 'Shade',
-          max: 'Sun',
+          min: 'Schaduw',
+          max: 'Zon',
         },
         render: (showRoofOnly, month, day) =>
           [...Array(24).keys()].map((hour) =>

@@ -45,16 +45,16 @@
   export let map: google.maps.Map;
 
   const icon = 'layers';
-  const title = 'Data Layers endpoint';
+  const title = 'Afbeeldingen';
 
   const dataLayerOptions: Record<LayerId | 'none', string> = {
-    none: 'No layer',
-    mask: 'Roof mask',
+    none: 'Geen laag',
+    mask: 'Dakmasker',
     dsm: 'Digital Surface Model',
-    rgb: 'Aerial image',
-    annualFlux: 'Annual sunshine',
-    monthlyFlux: 'Monthly sunshine',
-    hourlyShade: 'Hourly shade',
+    rgb: 'Luchtfoto',
+    annualFlux: 'Jaarlijkse zonneschijn',
+    monthlyFlux: 'Maandelijkse zonneschijn',
+    hourlyShade: 'Uurlijkse schaduw',
   };
 
   const monthNames = [
@@ -62,12 +62,12 @@
     'Feb',
     'Mar',
     'Apr',
-    'May',
+    'Mei',
     'Jun',
     'Jul',
     'Aug',
     'Sep',
-    'Oct',
+    'Okt',
     'Nov',
     'Dec',
   ];
@@ -218,8 +218,8 @@
   <Expandable bind:section={expandedSection} {icon} {title} subtitle={dataLayerOptions[layerId]}>
     <div class="flex flex-col space-y-2 px-2">
       <span class="outline-text label-medium">
-        <b>{title}</b> provides raw and processed imagery and granular details on an area surrounding
-        a location.
+        <b>{title}</b> geeft ruwe en bewerkte beelden en gedetailleerde details over een gebied rondom
+        een locatie.
       </span>
 
       <Dropdown
@@ -237,11 +237,11 @@
           <Calendar bind:month bind:day onChange={async () => showDataLayer()} />
         {/if}
 
-        <InputBool bind:value={showPanels} label="Solar panels" />
-        <InputBool bind:value={showRoofOnly} label="Roof only" onChange={() => showDataLayer()} />
+        <InputBool bind:value={showPanels} label="Zonnepanelen" />
+        <InputBool bind:value={showRoofOnly} label="Enkel dak" onChange={() => showDataLayer()} />
 
         {#if ['monthlyFlux', 'hourlyShade'].includes(layerId)}
-          <InputBool bind:value={playAnimation} label="Play animation" />
+          <InputBool bind:value={playAnimation} label="Speel animatie af" />
         {/if}
       {/if}
       <div class="flex flex-row">
@@ -278,32 +278,32 @@
         <div class="flex flex-col space-y-4">
           <p class="outline-text">
             {#if layerId == 'mask'}
-              The building mask image: one bit per pixel saying whether that pixel is considered to
-              be part of a rooftop or not.
+              De afbeelding van het gebouwmasker: één bit per pixel die zegt of die pixel wordt beschouwd als
+              onderdeel van een dak of niet.
             {:else if layerId == 'dsm'}
-              An image of the DSM (Digital Surface Model) of the region. Values are in meters above
-              EGM96 geoid (i.e., sea level). Invalid locations (where we don't have data) are stored
-              as -9999.
+              Een afbeelding van het DSM (Digital Surface Model) van de regio. De waarden zijn in meters boven
+              EGM96 geoïde (d.w.z. zeeniveau). Ongeldige locaties (waar we geen gegevens hebben) worden opgeslagen
+              als -9999.
             {:else if layerId == 'rgb'}
-              An image of RGB data (aerial photo) of the region.
+              Een afbeelding van RGB-gegevens (luchtfoto) van de regio.
             {:else if layerId == 'annualFlux'}
-              The annual flux map (annual sunlight on roofs) of the region. Values are kWh/kW/year.
-              This is unmasked flux: flux is computed for every location, not just building
-              rooftops. Invalid locations are stored as -9999: locations outside our coverage area
-              will be invalid, and a few locations inside the coverage area, where we were unable to
-              calculate flux, will also be invalid.
+              De jaarlijkse fluxkaart (jaarlijks zonlicht op daken) van de regio. Waarden zijn kWh/kW/jaar.
+              Dit is een ongemaskeerde flux: de flux wordt berekend voor elke locatie, niet alleen voor daken van gebouwen.
+              daken. Ongeldige locaties worden opgeslagen als -9999: locaties buiten ons dekkingsgebied
+              zullen ongeldig zijn, en een paar locaties binnen het dekkingsgebied, waar we geen flux konden berekenen, zullen ook ongeldig zijn.
+              flux konden berekenen, zullen ook ongeldig zijn.
             {:else if layerId == 'monthlyFlux'}
-              The monthly flux map (sunlight on roofs, broken down by month) of the region. Values
-              are kWh/kW/year. The GeoTIFF imagery file pointed to by this URL will contain twelve
-              bands, corresponding to January...December, in order.
+              De maandelijkse fluxkaart (zonlicht op daken, uitgesplitst per maand) van de regio. De waarden
+              zijn kWh/kW/jaar. Het GeoTIFF-beeldbestand waarnaar deze URL verwijst, bevat twaalf
+              banden, overeenkomend met januari...december, in volgorde.
             {:else if layerId == 'hourlyShade'}
-              Twelve URLs for hourly shade, corresponding to January...December, in order. Each
-              GeoTIFF imagery file will contain 24 bands, corresponding to the 24 hours of the day.
-              Each pixel is a 32 bit integer, corresponding to the (up to) 31 days of that month; a
-              1 bit means that the corresponding location is able to see the sun at that day, of
-              that hour, of that month. Invalid locations are stored as -9999 (since this is
-              negative, it has bit 31 set, and no valid value could have bit 31 set as that would
-              correspond to the 32nd day of the month).
+              Twaalf URL's voor schaduw per uur, overeenkomend met januari...december, in volgorde. Elk
+              GeoTIFF-beeldbestand bevat 24 banden, overeenkomend met de 24 uur van de dag.
+              Elke pixel is een geheel getal van 32 bits, dat overeenkomt met de (maximaal) 31 dagen van die maand; een
+              1 bit betekent dat de corresponderende locatie de zon kan zien op die dag, dat uur, die maand.
+              dat uur, van die maand. Ongeldige locaties worden opgeslagen als -9999 (omdat dit
+              negatief is, is bit 31 gezet, en geen enkele geldige waarde kan bit 31 gezet hebben omdat dat zou overeenkomen met de 32e dag van de maand.
+              overeenkomen met de 32e dag van de maand).
             {/if}
           </p>
 

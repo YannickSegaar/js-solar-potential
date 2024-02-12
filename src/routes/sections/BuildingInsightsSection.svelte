@@ -47,7 +47,7 @@
   export let map: google.maps.Map;
 
   const icon = 'home';
-  const title = 'Building Insights endpoint';
+  const title = 'Gebouwgegevens';
 
   let requestSent = false;
   let requestError: RequestError | undefined;
@@ -156,14 +156,14 @@
     bind:section={expandedSection}
     {icon}
     {title}
-    subtitle={`Yearly energy: ${(
+    subtitle={`Jaarlijkse energie: ${(
       (panelConfig.yearlyEnergyDcKwh * panelCapacityRatio) /
       1000
     ).toFixed(2)} MWh`}
   >
     <div class="flex flex-col space-y-2 px-2">
       <span class="outline-text label-medium">
-        <b>{title}</b> provides data on the location, dimensions & solar potential of a building.
+        <b>{title}</b> geeft gegevens over de locatie, afmetingen en het zonnepotentieel van een gebouw.
       </span>
 
       <InputPanelsCount
@@ -173,10 +173,10 @@
       <NumberInput
         bind:value={panelCapacityWatts}
         icon="bolt"
-        label="Panel capacity"
-        suffix="Watts"
+        label="Paneelcapaciteit"
+        suffix="Watt"
       />
-      <InputBool bind:value={showPanels} label="Solar panels" />
+      <InputBool bind:value={showPanels} label="Zonnepanelen" />
 
       <div class="grid justify-items-end">
         <md-filled-tonal-button role={undefined} on:click={() => apiResponseDialog.show()}>
@@ -204,7 +204,7 @@
   </Expandable>
 
   {#if expandedSection == title}
-    <div class="absolute top-0 left-0 w-72">
+    <div class="absolute top-0 left-0 w-75">
       <div class="flex flex-col space-y-2 m-2">
         <SummaryCard
           {icon}
@@ -212,25 +212,25 @@
           rows={[
             {
               icon: 'wb_sunny',
-              name: 'Annual sunshine',
+              name: 'Jaarlijkse zon',
               value: showNumber(buildingInsights.solarPotential.maxSunshineHoursPerYear),
-              units: 'hr',
+              units: 'uur',
             },
             {
               icon: 'square_foot',
-              name: 'Roof area',
+              name: 'Dakoppervlak',
               value: showNumber(buildingInsights.solarPotential.wholeRoofStats.areaMeters2),
               units: 'm²',
             },
             {
               icon: 'solar_power',
-              name: 'Max panel count',
+              name: 'Max aantal panelen',
               value: showNumber(buildingInsights.solarPotential.solarPanels.length),
-              units: 'panels',
+              units: 'panelen',
             },
             {
               icon: 'co2',
-              name: 'CO₂ savings',
+              name: 'CO₂ besparingen',
               value: showNumber(buildingInsights.solarPotential.carbonOffsetFactorKgPerMwh),
               units: 'Kg/MWh',
             },
@@ -241,7 +241,7 @@
           <div class="flex justify-around">
             <Gauge
               icon="solar_power"
-              title="Panels count"
+              title="Aantal panelen"
               label={showNumber(panelConfig.panelsCount)}
               labelSuffix={`/ ${showNumber(solarPanels.length)}`}
               max={solarPanels.length}
@@ -250,7 +250,7 @@
 
             <Gauge
               icon="energy_savings_leaf"
-              title="Yearly energy"
+              title="Jaarlijkse energie"
               label={showNumber((panelConfig?.yearlyEnergyDcKwh ?? 0) * panelCapacityRatio)}
               labelSuffix="KWh"
               max={buildingInsights.solarPotential.solarPanelConfigs.slice(-1)[0]

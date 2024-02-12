@@ -17,7 +17,8 @@
 <script lang="ts">
   /* global google */
 
-  import { Loader } from '@googlemaps/js-api-loader';
+  import * as GMAPILoader from '@googlemaps/js-api-loader';
+  const { Loader } = GMAPILoader;
   import { onMount } from 'svelte';
 
   import SearchBar from './components/SearchBar.svelte';
@@ -25,11 +26,11 @@
 
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const defaultPlace = {
-    name: 'Rinconada Library',
-    address: '1213 Newell Rd, Palo Alto, CA 94303',
+    name: '...',
+    address: 'Schweitzerlaan 12, 9728NP Groningen, Nederland',
   };
   let location: google.maps.LatLng | undefined;
-  const zoom = 19;
+  const zoom = 20;
 
   // Initialize app.
   let mapElement: HTMLElement;
@@ -77,51 +78,30 @@
   <!-- Main map -->
   <div bind:this={mapElement} class="w-full" />
 
-  <!-- Side bar -->
-  <aside class="flex-none md:w-96 w-80 p-2 pt-3 overflow-auto">
-    <div class="flex flex-col space-y-2 h-full">
-      {#if placesLibrary && map}
-        <SearchBar bind:location {placesLibrary} {map} initialValue={defaultPlace.name} />
-      {/if}
+<!-- Side bar -->
+<aside class="flex-none md:w-96 w-80 p-2 pt-3 overflow-auto">
+  <div class="flex flex-col space-y-2 h-full">
 
-      <div class="p-4 surface-variant outline-text rounded-lg space-y-3">
-        <p>
-          <a
-            class="primary-text"
-            href="https://developers.google.com/maps/documentation/solar/overview?hl=en"
-            target="_blank"
-          >
-            Two distinct endpoints of the <b>Solar API</b>
-            <md-icon class="text-sm">open_in_new</md-icon>
-          </a>
-          offer many benefits to solar marketplace websites, solar installers, and solar SaaS designers.
-        </p>
+    <!-- Your Company Logo at the Top -->
+    <div class="flex flex-col items-center w-full">
+      <img src="/src/routes/Protium Logo Centered.svg" alt="Protium Company Logo" class="w-auto h-20 my-4" />
+    </div>
 
-        <p>
-          <b>Click on an area below</b>
-          to see what type of information the Solar API can provide.
-        </p>
+    {#if placesLibrary && map}
+      <SearchBar bind:location {placesLibrary} {map} initialValue={defaultPlace.name} />
+    {/if}
+
+    {#if location}
+      <Sections {location} {map} {geometryLibrary} {googleMapsApiKey} />
+    {/if}
+
+      <!-- Your Customer's Company Logo at the Bottom -->
+      <div class="flex-grow"></div> <!-- This ensures that the customer logo stays at the bottom -->
+      <div class="flex flex-col items-center w-full pb-4">
+        <img src="/src/routes/RomAIx - Logo Design.svg" alt="RomAIx Company Logo" class="w-auto h-20 my-4" />
       </div>
 
-      {#if location}
-        <Sections {location} {map} {geometryLibrary} {googleMapsApiKey} />
-      {/if}
-
-      <div class="grow" />
-
-      <div class="flex flex-col items-center w-full">
-        <md-text-button
-          href="https://github.com/googlemaps-samples/js-solar-potential"
-          target="_blank"
-        >
-          View code on GitHub
-          <img slot="icon" src="github-mark.svg" alt="GitHub" width="16" height="16" />
-        </md-text-button>
-      </div>
-
-      <span class="pb-4 text-center outline-text label-small">
-        This is not an officially supported Google product.
-      </span>
     </div>
   </aside>
 </div>
+
