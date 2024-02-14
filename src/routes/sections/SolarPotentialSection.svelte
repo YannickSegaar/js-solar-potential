@@ -44,7 +44,7 @@
   export let defaultPanelCapacityWatts: number;
 
   const icon = 'payments';
-  const title = 'Protium Quickscan Analyse';
+  const title = 'Quickscan Resultaten';
 
   let costChart: HTMLElement;
   let showAdvancedSettings = false;

@@ -31,9 +31,9 @@
   <table class="table-auto w-full body-medium secondary-text">
     <tr>
       <td class="primary-text"><md-icon>solar_power</md-icon> </td>
-      <th class="pl-2 text-left">Panels count</th>
+      <th class="pl-2 text-left">Panelen aantal</th>
       <td class="pl-2 text-right">
-        <span>{solarPanelConfigs[configId].panelsCount} panels</span>
+        <span>{solarPanelConfigs[configId].panelsCount} panelen</span>
       </td>
     </tr>
   </table>
