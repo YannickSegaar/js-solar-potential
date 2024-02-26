@@ -1,21 +1,14 @@
-<!-- YRS: Deze code load de drawing library en staat toe dat er op de Google Maps een polygon kan worden getekend. Ook de andere sections
-zijn zichtbaar en werken!-->
-
-
-
+<!-- YRS: Deze code load de drawing library en staat toe dat er op de Google Maps een polygon kan worden getekend. Ook de andere sections zijn zichtbaar en werken! -->
 
 <!--
 ... (License and imports omitted for brevity)
 -->
 
-
-
-
 <script lang="ts">
   /* global google */
   import * as GMAPILoader from '@googlemaps/js-api-loader';
   const { Loader } = GMAPILoader;
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
   import SearchBar from './components/SearchBar.svelte';
   import Sections from './sections/Sections.svelte';
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -31,13 +24,16 @@ zijn zichtbaar en werken!-->
   let geometryLibrary: google.maps.GeometryLibrary;
   let mapsLibrary: google.maps.MapsLibrary;
   let placesLibrary: google.maps.PlacesLibrary;
-  let drawingManager: google.maps.drawing.DrawingManager; // Add this line
-  let selectedPolygon: google.maps.Polygon | null = null; // Add this line
-  let polygons: google.maps.Polygon[] = []; // Add this line
-  let infoWindows: google.maps.InfoWindow[] = []; // Add this line
+  let drawingManager: google.maps.drawing.DrawingManager;
+  let selectedPolygon: google.maps.Polygon | null = null;
+  let polygons: google.maps.Polygon[] = [];
+  let infoWindows: google.maps.InfoWindow[] = [];
+  let roofsizeDrawing = 0;
   onMount(async () => {
-    // Load the Google Maps libraries.
-    const loader = new Loader({ apiKey: googleMapsApiKey, libraries: ["geometry", "places", "drawing"] }); // Add "drawing" to the libraries array
+    const loader = new Loader({
+      apiKey: googleMapsApiKey,
+      libraries: ["geometry", "places", "drawing"]
+    });
     const libraries = {
       geometry: loader.importLibrary('geometry'),
       maps: loader.importLibrary('maps'),
@@ -46,13 +42,11 @@ zijn zichtbaar en werken!-->
     geometryLibrary = await libraries.geometry;
     mapsLibrary = await libraries.maps;
     placesLibrary = await libraries.places;
-    // Get the address information for the default location.
     const geocoder = new google.maps.Geocoder();
     const geocoderResponse = await geocoder.geocode({
       address: defaultPlace.address,
     });
     const geocoderResult = geocoderResponse.results[0];
-    // Initialize the map at the desired location.
     location = geocoderResult.geometry.location;
     map = new mapsLibrary.Map(mapElement, {
       center: location,
@@ -65,7 +59,6 @@ zijn zichtbaar en werken!-->
       streetViewControl: false,
       zoomControl: false,
     });
-    // Initialize the Drawing Manager here
     drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
       drawingControl: true,
@@ -84,87 +77,42 @@ zijn zichtbaar en werken!-->
       }
     });
     drawingManager.setMap(map);
-    // Add event listener for polygon complete
+
     google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+      polygons.push(polygon);
+      // Automatically update the coordinates and area when the polygon is edited
+      // Listen for the 'set_at' and 'insert_at' events for polygon paths
+      google.maps.event.addListener(polygon.getPath(), 'set_at', updatePolygonDetails);
+      google.maps.event.addListener(polygon.getPath(), 'insert_at', updatePolygonDetails);
+
       const InfoBoxLoc = polygonCenter(polygon);
       const infowindow = new google.maps.InfoWindow({
-        content: `
-          <table>
-            <tr>
-              <td style="text-align: center;"><strong>Naam:</strong></td>
-              <td><input type='text' id='Naam'/> </td>
-            </tr>
-            <tr>
-              <td><input type='button' value='save' data-action='save' style="font-weight: bold; text-decoration: underline;" /></td>
-              <td><input type='button' value='delete' data-action='delete' style="font-weight: bold; text-decoration: underline;" /></td>
-            </tr>
-          </table>
-        `,
+        content: generateInfoWindowContent(polygon),
         position: InfoBoxLoc,
       });
       infowindow.open(map);
-      // Add event listeners for save and delete buttons
-      google.maps.event.addListener(infowindow, 'domready', event => {
-        const saveButton = document.querySelector('td > input[type="button"][data-action="save"]');
-        const deleteButton = document.querySelector('td > input[type="button"][data-action="delete"]');
-        if (saveButton && deleteButton) {
-          saveButton.addEventListener('click', e => {
-            const fieldname = escape(document.getElementById("Naam").value);
-            console.log(fieldname);
-            const coordinates = polygon.getPath().getArray().map(coord => ({ lat: coord.lat(), lng: coord.lng() }));
-            const area = google.maps.geometry.spherical.computeArea(polygon.getPath());
-            console.log('Coordinates:', coordinates);
-            console.log('Area:', area);
-            const infoContent = `
-              <table>
-                <tr>
-                  <td style="text-align: center;"><strong>Naam:</strong></td>
-                  <td><input type='text' id='Naam' value='${fieldname}'/> </td>
-                </tr>
-                <tr>
-                  <td><input type='button' value='save' data-action='save' style="font-weight: bold; text-decoration: underline;" /></td>
-                  <td><input type='button' value='delete' data-action='delete' style="font-weight: bold; text-decoration: underline;" /></td>
-                </tr>
-                <tr>
-                  <td>Coordinates:</td>
-                  <td>${JSON.stringify(coordinates)}</td>
-                </tr>
-                <tr>
-                  <td>Area:</td>
-                  <td>${area.toFixed(2)} m²</td>
-                </tr>
-              </table>
-            `;
-            infowindow.setContent(infoContent);
-            selectedPolygon = polygon;
-          });
-          deleteButton.addEventListener('click', e => {
-            infowindow.close();
-            polygon.setMap(null);
-            selectedPolygon = null;
-            polygons = polygons.filter(p => p !== polygon);
-            infoWindows = infoWindows.filter(iw => iw !== infowindow); // Remove the info window from the array
-          });
-        }
+      infoWindows.push(infowindow); // Track the infowindow
+
+      google.maps.event.addListener(infowindow, 'domready', () => {
+        attachInfoWindowEventListeners(infowindow, polygon);
       });
-      // Add event listener to reopen the info window when the polygon is clicked
-      google.maps.event.addListener(polygon, 'click', function() {
+
+      google.maps.event.addListener(polygon, 'click', () => {
         infowindow.open(map);
       });
-      polygons.push(polygon);
-      infoWindows.push(infowindow); // Add this line
-      // Exit drawing mode
-      drawingManager.setDrawingMode(null);
+
+      drawingManager.setDrawingMode(null); // Exit drawing mode
     });
   });
-  function polygonCenter(poly: google.maps.Polygon): google.maps.LatLng {
-    let lowx: number,
-      highx: number,
-      lowy: number,
-      highy: number,
-      lats: number[] = [],
-      lngs: number[] = [],
-      vertices = poly.getPath();
+
+  afterUpdate(() => {
+    // Update the total area whenever the component updates
+    roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
+    console.log('roofsizeDrawing:', roofsizeDrawing);
+  });
+
+  function polygonCenter(poly) {
+    let lowx, highx, lowy, highy, lats = [], lngs = [], vertices = poly.getPath();
     for (let i = 0; i < vertices.getLength(); i++) {
       lngs.push(vertices.getAt(i).lng());
       lats.push(vertices.getAt(i).lat());
@@ -179,9 +127,63 @@ zijn zichtbaar en werken!-->
     const center_y = lowy + (highy - lowy) / 2;
     return new google.maps.LatLng(center_x, center_y);
   }
- </script>
- <!-- Top bar -->
- <div class="flex flex-row h-full">
+
+  function updatePolygonDetails() {
+    // This function updates the roof size drawing and refreshes info windows content
+    roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
+    console.log('Updated roofsizeDrawing:', roofsizeDrawing);
+    infoWindows.forEach((infowindow, index) => {
+      const polygon = polygons[index];
+      infowindow.setContent(generateInfoWindowContent(polygon));
+    });
+  }
+
+  function generateInfoWindowContent(polygon) {
+    const area = google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2);
+    const coordinates = polygon.getPath().getArray().map(coord => ({ lat: coord.lat(), lng: coord.lng() }));
+    return `
+      <table>
+        <tr>
+          <td style="text-align: center;"><strong>Naam:</strong></td>
+          <td><input type='text' id='Naam'/> </td>
+        </tr>
+        <tr>
+          <td><input type='button' value='save' data-action='save' style="font-weight: bold; text-decoration: underline;" /></td>
+          <td><input type='button' value='delete' data-action='delete' style="font-weight: bold; text-decoration: underline;" /></td>
+        </tr>
+        <tr>
+          <td>Coordinates:</td>
+          <td>${JSON.stringify(coordinates)}</td>
+        </tr>
+        <tr>
+          <td>Area:</td>
+          <td>${area} m²</td>
+        </tr>
+      </table>
+    `;
+  }
+
+  function attachInfoWindowEventListeners(infowindow, polygon) {
+    const saveButton = document.querySelector('td > input[type="button"][data-action="save"]');
+    const deleteButton = document.querySelector('td > input[type="button"][data-action="delete"]');
+    if (saveButton && deleteButton) {
+      saveButton.addEventListener('click', () => {
+        const fieldname = escape(document.getElementById("Naam").value);
+        console.log(fieldname);
+        // No need to manually update coordinates and area here anymore, as they are updated automatically
+      });
+      deleteButton.addEventListener('click', () => {
+        infowindow.close();
+        polygon.setMap(null);
+        polygons = polygons.filter(p => p !== polygon);
+        infoWindows = infoWindows.filter(iw => iw !== infowindow);
+        updatePolygonDetails(); // Update the roofsizeDrawing after deletion
+      });
+    }
+  }
+</script>
+<!-- Top bar -->
+<div class="flex flex-row h-full">
   <!-- Main map -->
   <div bind:this={mapElement} class="w-full"></div>
   <!-- Side bar -->
