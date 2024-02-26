@@ -205,7 +205,7 @@ zijn zichtbaar en werken!-->
         <img src="/src/routes/Protium Logo Centered.svg" alt="Protium Company Logo" class="w-auto h-20 my-4" />
       </div>
       {#if placesLibrary && map}
-        <SearchBar {location} {placesLibrary} {map} initialValue={defaultPlace.name} />
+        <SearchBar bind:location {placesLibrary} {map} initialValue={defaultPlace.name} />
       {/if}
       {#if location}
         <Sections {location} {map} {geometryLibrary} {googleMapsApiKey} />
