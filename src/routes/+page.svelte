@@ -33,6 +33,8 @@ zijn zichtbaar en werken!-->
   let placesLibrary: google.maps.PlacesLibrary;
   let drawingManager: google.maps.drawing.DrawingManager; // Add this line
   let selectedPolygon: google.maps.Polygon | null = null; // Add this line
+  let polygons: google.maps.Polygon[] = []; // Add this line
+  let infoWindows: google.maps.InfoWindow[] = []; // Add this line
   onMount(async () => {
     // Load the Google Maps libraries.
     const loader = new Loader({ apiKey: googleMapsApiKey, libraries: ["geometry", "places", "drawing"] }); // Add "drawing" to the libraries array
@@ -70,26 +72,6 @@ zijn zichtbaar en werken!-->
       drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-        event: (event: google.maps.drawing.OverlayCompleteEvent) => {
-          const polygon = event.overlay as google.maps.Polygon;
-          const paths = polygon.getPath();
-          const coordinates: google.maps.LatLng[] = [];
- 
- 
-          paths.forEach((coord: google.maps.LatLng) => {
-            coordinates.push(coord);
-          });
- 
- 
-          if (mapElement && selectedPolygon) {
-            const inputElement = mapElement as HTMLInputElement;
-            inputElement.value = JSON.stringify(coordinates);
-          }
- 
- 
-          const area = google.maps.geometry.spherical.computeArea(paths);
-          console.log('Area:', area);
-        }
       },
       polygonOptions: {
         fillColor: '#ffff00',
@@ -104,7 +86,6 @@ zijn zichtbaar en werken!-->
     drawingManager.setMap(map);
     // Add event listener for polygon complete
     google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
-      drawingManager.setDrawingMode(null);
       const InfoBoxLoc = polygonCenter(polygon);
       const infowindow = new google.maps.InfoWindow({
         content: `
@@ -157,10 +138,12 @@ zijn zichtbaar en werken!-->
             infowindow.setContent(infoContent);
             selectedPolygon = polygon;
           });
-           deleteButton.addEventListener('click', e => {
+          deleteButton.addEventListener('click', e => {
             infowindow.close();
             polygon.setMap(null);
             selectedPolygon = null;
+            polygons = polygons.filter(p => p !== polygon);
+            infoWindows = infoWindows.filter(iw => iw !== infowindow); // Remove the info window from the array
           });
         }
       });
@@ -168,6 +151,10 @@ zijn zichtbaar en werken!-->
       google.maps.event.addListener(polygon, 'click', function() {
         infowindow.open(map);
       });
+      polygons.push(polygon);
+      infoWindows.push(infowindow); // Add this line
+      // Exit drawing mode
+      drawingManager.setDrawingMode(null);
     });
   });
   function polygonCenter(poly: google.maps.Polygon): google.maps.LatLng {
@@ -217,4 +204,4 @@ zijn zichtbaar en werken!-->
       </div>
     </div>
   </aside>
-</div> 
+</div>
