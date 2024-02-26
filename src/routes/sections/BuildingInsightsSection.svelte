@@ -190,21 +190,18 @@ limitations under the License.
         bind:configId
         solarPanelConfigs={buildingInsights.solarPotential.solarPanelConfigs}
       />
-      <!--
-        //YRS: input field voor panel capacity uitgeschakeld voor building insight section
+
       <NumberInput
         bind:value={panelCapacityWatts}
         icon="bolt"
         label="Paneelcapaciteit"
         suffix="Watt"
       />
-      //YRS: einde input field voor panel capacity uitgeschakeld voor building insight section
-      -->
+
       <InputBool bind:value={showPanels} label="Zonnepanelen" />
  
  
-      <!--
-        //YRS: API response button uitgeschakeld voor building insight section
+
       <div class="grid justify-items-end">
         <md-filled-tonal-button role={undefined} on:click={() => apiResponseDialog.show()}>
           API response
@@ -229,8 +226,7 @@ limitations under the License.
         </div>
       </md-dialog>
     </div>
-    //YRS: Einde van API response button voor building insight section
-    -->
+
  
  
   </Expandable>
