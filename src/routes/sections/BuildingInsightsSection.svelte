@@ -1,22 +1,27 @@
 <!--
- Copyright 2023 Google LLC
+Copyright 2023 Google LLC
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
 
-      https://www.apache.org/licenses/LICENSE-2.0
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- -->
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
 
 <script lang="ts">
   /* global google */
-
+ 
+ 
   import type { MdDialog } from '@material/web/dialog/dialog';
   import Expandable from '../components/Expandable.svelte';
   import {
@@ -34,53 +39,64 @@
   import { showNumber } from '../utils';
   import NumberInput from '../components/InputNumber.svelte';
   import Gauge from '../components/Gauge.svelte';
-
+ 
+ 
   export let expandedSection: string;
   export let buildingInsights: BuildingInsightsResponse | undefined;
   export let configId: number | undefined;
   export let panelCapacityWatts: number;
   export let showPanels: boolean;
-
+ 
+ 
   export let googleMapsApiKey: string;
   export let geometryLibrary: google.maps.GeometryLibrary;
   export let location: google.maps.LatLng;
   export let map: google.maps.Map;
-
+ 
+ 
   const icon = 'home';
   const title = 'Gebouwgegevens';
-
+ 
+ 
   let requestSent = false;
   let requestError: RequestError | undefined;
   let apiResponseDialog: MdDialog;
-
+ 
+ 
   let panelConfig: SolarPanelConfig | undefined;
   $: if (buildingInsights && configId !== undefined) {
     panelConfig = buildingInsights.solarPotential.solarPanelConfigs[configId];
   }
-
+ 
+ 
   let solarPanels: google.maps.Polygon[] = [];
   $: solarPanels.map((panel, i) =>
     panel.setMap(showPanels && panelConfig && i < panelConfig.panelsCount ? map : null),
   );
-
+ 
+ 
   let panelCapacityRatio = 1.0;
   $: if (buildingInsights) {
     const defaultPanelCapacity = buildingInsights.solarPotential.panelCapacityWatts;
     panelCapacityRatio = panelCapacityWatts / defaultPanelCapacity;
   }
-
+ 
+ 
   export async function showSolarPotential(location: google.maps.LatLng) {
     if (requestSent) {
       return;
     }
-
+ 
+ 
     console.log('showSolarPotential');
     buildingInsights = undefined;
     requestError = undefined;
-
+ 
+ 
     solarPanels.map((panel) => panel.setMap(null));
     solarPanels = [];
-
+ 
+ 
     requestSent = true;
     try {
       buildingInsights = await findClosestBuilding(location, googleMapsApiKey);
@@ -90,7 +106,8 @@
     } finally {
       requestSent = false;
     }
-
+ 
+ 
     // Create the solar panels on the map.
     const solarPotential = buildingInsights.solarPotential;
     const palette = createPalette(panelsPalette).map(rgbToColor);
@@ -124,11 +141,13 @@
       });
     });
   }
-
+ 
+ 
   $: showSolarPotential(location);
-</script>
-
-{#if requestError}
+ </script>
+ 
+ 
+ {#if requestError}
   <div class="error-container on-error-container-text">
     <Expandable section={title} icon="error" {title} subtitle={requestError.error.status}>
       <div class="grid place-items-center py-2 space-y-4">
@@ -147,11 +166,11 @@
       </div>
     </Expandable>
   </div>
-{:else if !buildingInsights}
+ {:else if !buildingInsights}
   <div class="grid py-8 place-items-center">
     <md-circular-progress four-color indeterminate />
   </div>
-{:else if configId !== undefined && panelConfig}
+ {:else if configId !== undefined && panelConfig}
   <Expandable
     bind:section={expandedSection}
     {icon}
@@ -165,7 +184,8 @@
       <span class="outline-text label-medium">
         <b>{title}</b> geeft gegevens over de locatie, afmetingen en het zonnepotentieel van een gebouw.
       </span>
-
+ 
+ 
       <InputPanelsCount
         bind:configId
         solarPanelConfigs={buildingInsights.solarPotential.solarPanelConfigs}
@@ -181,7 +201,8 @@
       //YRS: einde input field voor panel capacity uitgeschakeld voor building insight section
       -->
       <InputBool bind:value={showPanels} label="Zonnepanelen" />
-
+ 
+ 
       <!--
         //YRS: API response button uitgeschakeld voor building insight section
       <div class="grid justify-items-end">
@@ -189,7 +210,8 @@
           API response
         </md-filled-tonal-button>
       </div>
-
+ 
+ 
       <md-dialog bind:this={apiResponseDialog}>
         <div slot="headline">
           <div class="flex items-center primary-text">
@@ -209,9 +231,11 @@
     </div>
     //YRS: Einde van API response button voor building insight section
     -->
-
+ 
+ 
   </Expandable>
-
+ 
+ 
   {#if expandedSection == title}
     <div class="absolute top-0 left-0 w-75">
       <div class="flex flex-col space-y-2 m-2">
@@ -245,7 +269,8 @@
             },
           ]}
         />
-
+ 
+ 
         <div class="p-4 w-full surface on-surface-text rounded-lg shadow-md">
           <div class="flex justify-around">
             <Gauge
@@ -256,7 +281,8 @@
               max={solarPanels.length}
               value={panelConfig.panelsCount}
             />
-
+ 
+ 
             <Gauge
               icon="energy_savings_leaf"
               title="Jaarlijkse energie"
@@ -272,4 +298,5 @@
     </div>
   {/if}
 {/if}
-<!-- TEST-->
+
+ 
