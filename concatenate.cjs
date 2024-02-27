@@ -29,7 +29,7 @@ const ignoreList = [
 ];
 
 // Create a write stream for the output file.
-const writeStream = fs.createWriteStream('output.txt');
+const writeStream = fs.createWriteStream('output2.txt');
 
 // Function to write file data to the output file.
 const writeFileToOutput = (filePath) => {

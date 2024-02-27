@@ -21,10 +21,9 @@ limitations under the License.
 <script lang="ts">
   /* global google */
  
- 
   import type { MdDialog } from '@material/web/dialog/dialog';
   import Expandable from '../components/Expandable.svelte';
-  import {
+    import {
     type BuildingInsightsResponse,
     type RequestError,
     findClosestBuilding,

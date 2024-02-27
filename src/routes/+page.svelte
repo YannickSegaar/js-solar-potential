@@ -1,8 +1,10 @@
 <!-- YRS: Deze code load de drawing library en staat toe dat er op de Google Maps een polygon kan worden getekend. Ook de andere sections zijn zichtbaar en werken! -->
 
+
 <!--
 ... (License and imports omitted for brevity)
 -->
+
 
 <script lang="ts">
   /* global google */
@@ -77,14 +79,16 @@
       }
     });
     drawingManager.setMap(map);
-
+ 
+ 
     google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
       polygons.push(polygon);
       // Automatically update the coordinates and area when the polygon is edited
       // Listen for the 'set_at' and 'insert_at' events for polygon paths
       google.maps.event.addListener(polygon.getPath(), 'set_at', updatePolygonDetails);
       google.maps.event.addListener(polygon.getPath(), 'insert_at', updatePolygonDetails);
-
+ 
+ 
       const InfoBoxLoc = polygonCenter(polygon);
       const infowindow = new google.maps.InfoWindow({
         content: generateInfoWindowContent(polygon),
@@ -92,25 +96,30 @@
       });
       infowindow.open(map);
       infoWindows.push(infowindow); // Track the infowindow
-
+ 
+ 
       google.maps.event.addListener(infowindow, 'domready', () => {
         attachInfoWindowEventListeners(infowindow, polygon);
       });
-
+ 
+ 
       google.maps.event.addListener(polygon, 'click', () => {
         infowindow.open(map);
       });
-
+ 
+ 
       drawingManager.setDrawingMode(null); // Exit drawing mode
     });
   });
-
+ 
+ 
   afterUpdate(() => {
     // Update the total area whenever the component updates
     roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
     console.log('roofsizeDrawing:', roofsizeDrawing);
   });
-
+ 
+ 
   function polygonCenter(poly) {
     let lowx, highx, lowy, highy, lats = [], lngs = [], vertices = poly.getPath();
     for (let i = 0; i < vertices.getLength(); i++) {
@@ -127,7 +136,8 @@
     const center_y = lowy + (highy - lowy) / 2;
     return new google.maps.LatLng(center_x, center_y);
   }
-
+ 
+ 
   function updatePolygonDetails() {
     // This function updates the roof size drawing and refreshes info windows content
     roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
@@ -137,7 +147,8 @@
       infowindow.setContent(generateInfoWindowContent(polygon));
     });
   }
-
+ 
+ 
   function generateInfoWindowContent(polygon) {
     const area = google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2);
     const coordinates = polygon.getPath().getArray().map(coord => ({ lat: coord.lat(), lng: coord.lng() }));
@@ -162,7 +173,8 @@
       </table>
     `;
   }
-
+ 
+ 
   function attachInfoWindowEventListeners(infowindow, polygon) {
     const saveButton = document.querySelector('td > input[type="button"][data-action="save"]');
     const deleteButton = document.querySelector('td > input[type="button"][data-action="delete"]');
@@ -181,9 +193,9 @@
       });
     }
   }
-</script>
-<!-- Top bar -->
-<div class="flex flex-row h-full">
+ </script>
+ <!-- Top bar -->
+ <div class="flex flex-row h-full">
   <!-- Main map -->
   <div bind:this={mapElement} class="w-full"></div>
   <!-- Side bar -->
@@ -206,4 +218,4 @@
       </div>
     </div>
   </aside>
-</div>
+</div> 
