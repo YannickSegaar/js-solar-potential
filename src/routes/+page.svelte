@@ -109,14 +109,14 @@
  
  
       drawingManager.setDrawingMode(null); // Exit drawing mode
+      updateRoofsizeDrawing(); // Update the roofsizeDrawing when a new polygon is completed
     });
   });
  
  
   afterUpdate(() => {
     // Update the total area whenever the component updates
-    roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
-    console.log('roofsizeDrawing:', roofsizeDrawing);
+    updateRoofsizeDrawing();
   });
  
  
@@ -140,8 +140,7 @@
  
   function updatePolygonDetails() {
     // This function updates the roof size drawing and refreshes info windows content
-    roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
-    console.log('Updated roofsizeDrawing:', roofsizeDrawing);
+    updateRoofsizeDrawing();
     infoWindows.forEach((infowindow, index) => {
       const polygon = polygons[index];
       infowindow.setContent(generateInfoWindowContent(polygon));
@@ -193,6 +192,11 @@
       });
     }
   }
+  
+  function updateRoofsizeDrawing() {
+    roofsizeDrawing = polygons.reduce((total, p) => total + google.maps.geometry.spherical.computeArea(p.getPath()), 0);
+    console.log('roofsizeDrawing:', roofsizeDrawing);
+  }
  </script>
  <!-- Top bar -->
  <div class="flex flex-row h-full">
@@ -218,4 +222,4 @@
       </div>
     </div>
   </aside>
-</div> 
+</div>
