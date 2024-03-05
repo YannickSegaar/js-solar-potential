@@ -218,7 +218,7 @@
       <!-- Your Customer's Company Logo at the Bottom -->
       <div class="flex-grow"></div> <!-- This ensures that the customer logo stays at the bottom -->
       <div class="flex flex-col items-center w-full pb-4">
-        <img src="/src/routes/RomAIx - Logo Design.svg" alt="RomAIx Company Logo" class="w-auto h-20 my-4" />
+        <!-- <img src="/src/routes/RomAIx - Logo Design.svg" alt="RomAIx Company Logo" class="w-auto h-20 my-4" /> -->
       </div>
     </div>
   </aside>
