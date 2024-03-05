@@ -49,7 +49,7 @@
       var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
       v.onload = function() {
         window.voiceflow.chat.load({
-          verify: { projectID: '65b91c3caf9962c75637b6c5' },
+          verify: { projectID: '65e6cb2b5eabfed05e58d22b' },
           url: 'https://general-runtime.voiceflow.com',
           versionID: 'production',
           assistant: {
@@ -61,16 +61,16 @@
           // Delay the first proactive message
           setTimeout(function() {
             window.voiceflow.chat.proactive.push(
-              { type: 'text', payload: { message: "Weten wat uw dak oplevert? ☀️" } }
+              { type: 'text', payload: { message: "Hulp nodig bij uw scan❓" } }
             );
-          }, 5000); // 2000 milliseconds delay for the first message
+          }, 7000); // milliseconds delay for the first message adjust as needed
   
           // Delay the second proactive message
           setTimeout(function() {
             window.voiceflow.chat.proactive.push(
-              { type: 'text', payload: { message: "Doe met mij samen de dakscan!" } }
+              { type: 'text', payload: { message: "Klik hier voor assistentie! 🤖" } }
             );
-          }, 7000); // Additional 5000 milliseconds delay for the second message
+          }, 9000); // Additional milliseconds delay for the second message adjust as needed
   
           // Delay opening the chat window to ensure the proactive messages are loaded
           setTimeout(function() {
