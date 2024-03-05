@@ -43,4 +43,46 @@
   <body data-sveltekit-preload-data="hover">
     <div style="display: contents">%sveltekit.body%</div>
   </body>
+
+  <script type="text/javascript">
+    (function(d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function() {
+        window.voiceflow.chat.load({
+          verify: { projectID: '65b91c3caf9962c75637b6c5' },
+          url: 'https://general-runtime.voiceflow.com',
+          versionID: 'production',
+          assistant: {
+              stylesheet: "https://yannicksegaar.github.io/react-chat-app-styles/styles.css"
+            }
+        }).then(() => {
+          window.voiceflow.chat.proactive.clear(); // clear all previous messages
+          
+          // Delay the first proactive message
+          setTimeout(function() {
+            window.voiceflow.chat.proactive.push(
+              { type: 'text', payload: { message: "Weten wat uw dak oplevert? ☀️" } }
+            );
+          }, 5000); // 2000 milliseconds delay for the first message
+  
+          // Delay the second proactive message
+          setTimeout(function() {
+            window.voiceflow.chat.proactive.push(
+              { type: 'text', payload: { message: "Doe met mij samen de dakscan!" } }
+            );
+          }, 7000); // Additional 5000 milliseconds delay for the second message
+  
+          // Delay opening the chat window to ensure the proactive messages are loaded
+          setTimeout(function() {
+            window.voiceflow.chat.open();
+          }, 9000); // Adjust this delay if needed to open the chat after messages
+        });
+      };
+      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; 
+      v.type = "text/javascript"; 
+      s.parentNode.insertBefore(v, s);
+    })(document, 'script');
+  </script>
+  
+  
 </html>
