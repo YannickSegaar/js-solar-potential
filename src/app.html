@@ -63,19 +63,19 @@
             window.voiceflow.chat.proactive.push(
               { type: 'text', payload: { message: "Hulp nodig bij uw scan❓" } }
             );
-          }, 7000); // milliseconds delay for the first message adjust as needed
+          }, 12000); // milliseconds delay for the first message adjust as needed
   
           // Delay the second proactive message
           setTimeout(function() {
             window.voiceflow.chat.proactive.push(
               { type: 'text', payload: { message: "Klik hier voor assistentie! 🤖" } }
             );
-          }, 9000); // Additional milliseconds delay for the second message adjust as needed
+          }, 14000); // Additional milliseconds delay for the second message adjust as needed
   
           // Delay opening the chat window to ensure the proactive messages are loaded
           setTimeout(function() {
             window.voiceflow.chat.open();
-          }, 12000); // Adjust this delay if needed to open the chat after messages
+          }, 18000); // Adjust this delay if needed to open the chat after messages
         });
       };
       v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; 

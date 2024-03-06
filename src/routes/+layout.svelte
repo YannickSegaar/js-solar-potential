@@ -48,8 +48,8 @@
 </script>
 
 <svelte:head>
-  <title>Protium Quickscan</title>
-  <meta name="description" content="Solar API demo" />
+  <title>RomAIx Solar Scan</title>
+  <meta name="description" content="Solar Scan Application" />
 </svelte:head>
 
 <main class="surface on-surface-text body-medium flex flex-col w-screen h-screen">

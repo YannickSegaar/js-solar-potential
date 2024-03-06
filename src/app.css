@@ -323,3 +323,27 @@
 .scrim-text {
   color: var(--md-sys-color-scrim);
 }
+
+/* YRS: Styling voor aanpassen van bovenste logo in sidebar */
+.logo-container {
+  width: 100%; /* Same width as the side bar */
+  height: 60px; /* Change the height as desired */
+  background-color: #000FFF; /* Change the background color as desired */
+  border-radius: 10px; /* Change the border radius as desired */
+  border: 0px solid red; /* Temporary for debugging */
+  display: flex; /* Add this */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  margin-top: 0px; /* Change the margin as desired */
+  margin-bottom: 0px; /* Change the margin as desired */
+  margin-right: 0px; /* Change the margin as desired */
+  margin-left: 0px; /* Change the margin as desired */
+  /* Add any other styling properties as desired */
+}
+
+.company-logo {
+  width: 500px; /* Change the size of the company logo as desired */
+  height: 100px; /* Allow the logo to scale proportionally */
+  margin: 10px; /* Change the margin as desired */
+  /* Add any other positioning or styling properties as desired */
+}
