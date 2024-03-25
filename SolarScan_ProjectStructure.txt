@@ -1,0 +1,69 @@
+.
+├── CONTRIBUTING
+├── LICENSE
+├── README.md
+├── concatenate.cjs
+├── output_Docs.txt
+├── package-lock.json
+├── package.json
+├── playwright.config.ts
+├── postcss.config.js
+├── project_structure.txt
+├── src
+│   ├── app.css
+│   ├── app.d.ts
+│   ├── app.html
+│   ├── routes
+│   │   ├── +layout.svelte
+│   │   ├── +page.svelte
+│   │   ├── +page.ts
+│   │   ├── Protium Logo Centered.svg
+│   │   ├── Protium Quickscan Full Name.svg
+│   │   ├── RomAIx - Logo Design.png
+│   │   ├── RomAIx - Logo Design.svg
+│   │   ├── RomAIx - Topbar Design.png
+│   │   ├── Romaix - Full Name Design.svg
+│   │   ├── colors.ts
+│   │   ├── components
+│   │   │   ├── Calendar.svelte
+│   │   │   ├── Dropdown.svelte
+│   │   │   ├── Expandable.svelte
+│   │   │   ├── Gauge.svelte
+│   │   │   ├── InputBool.svelte
+│   │   │   ├── InputMoney.svelte
+│   │   │   ├── InputNumber.svelte
+│   │   │   ├── InputPanelsCount.svelte
+│   │   │   ├── InputPercent.svelte
+│   │   │   ├── InputRatio.svelte
+│   │   │   ├── SearchBar.svelte
+│   │   │   ├── Show.svelte
+│   │   │   ├── SummaryCard.svelte
+│   │   │   └── Table.svelte
+│   │   ├── layer.ts
+│   │   ├── pageDRAW.svelte
+│   │   ├── page_Drawing_Coordinates.svelte
+│   │   ├── page_WorkingDrawing.svelte
+│   │   ├── sections
+│   │   │   ├── BuildingInsightsSection.svelte
+│   │   │   ├── DataLayersSection.svelte
+│   │   │   ├── Sections.svelte
+│   │   │   └── SolarPotentialSection.svelte
+│   │   ├── solar.test.ts
+│   │   ├── solar.ts
+│   │   ├── utils.ts
+│   │   └── visualize.ts
+│   └── theme
+│       ├── colors.module.css
+│       ├── theme.css
+│       ├── theme.dark.css
+│       ├── theme.light.css
+│       ├── tokens.css
+│       └── typography.module.css
+├── svelte.config.js
+├── tailwind.config.js
+├── tests
+│   └── test.ts
+├── tsconfig.json
+├── vite.config.ts
+├── vitest.config.js
+
